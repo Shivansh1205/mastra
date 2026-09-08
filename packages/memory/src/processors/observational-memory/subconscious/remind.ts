@@ -144,6 +144,7 @@ export class SubconsciousRemindExtractor extends Extractor<string> {
             ),
           ];
           const recentMessages = context.recentMessages?.trim() || '(none)';
+          const activeObservations = context.activeObservations?.trim() || '(none)';
           const replyTool = context.mainAgent
             ? createReplyToMemoryQuestionTool({
                 parentAgent: context.mainAgent,
@@ -166,7 +167,7 @@ export class SubconsciousRemindExtractor extends Extractor<string> {
           });
           const delivery = agent.sendMessage(
             {
-              contents: `Passive reminder check ${eventId}\n\nCurrent time: ${new Date(createdAt).toISOString()}\n\nScoped source candidates:\n${JSON.stringify(sources)}\n\nCurrent observations:\n${context.rawObservations}\n\nRecent conversation messages already visible to the parent agent:\n${recentMessages}`,
+              contents: `Passive reminder check ${eventId}\n\nCurrent time: ${new Date(createdAt).toISOString()}\n\nScoped source candidates:\n${JSON.stringify(sources)}\n\nNewly extracted observations:\n${context.rawObservations}\n\nAccumulated active observations already visible to the parent agent:\n${activeObservations}\n\nRecent conversation messages already visible to the parent agent:\n${recentMessages}`,
               metadata: {
                 [REMIND_MESSAGE_METADATA_KEY]: { type: 'passive-check', eventId, candidateIds },
               },
