@@ -209,6 +209,8 @@ import type {
   AgentThreadSubscription,
   CancelQueuedAgentMessagesOptions,
   CancelQueuedAgentMessagesResult,
+  QueuedAgentMessagesListener,
+  SubscribeQueuedAgentMessagesOptions,
   PublicStructuredOutputOptions,
   QueueAgentMessageOptions,
   QueueAgentMessageResult,
@@ -8372,7 +8374,22 @@ export class Agent<
    * @experimental Agent message APIs are experimental and may change in a future release.
    */
   cancelQueuedMessages(target: CancelQueuedAgentMessagesOptions): CancelQueuedAgentMessagesResult {
-    return agentThreadStreamRuntime.cancelQueuedMessages(target, this.getPubSub());
+    return agentThreadStreamRuntime.cancelQueuedMessages(this as Agent<any, any, any, any>, target, this.getPubSub());
+  }
+
+  /**
+   * @experimental Agent message APIs are experimental and may change in a future release.
+   */
+  subscribeQueuedMessages(
+    scope: SubscribeQueuedAgentMessagesOptions,
+    listener: QueuedAgentMessagesListener,
+  ): () => void {
+    return agentThreadStreamRuntime.subscribeQueuedMessages(
+      this as Agent<any, any, any, any>,
+      scope,
+      listener,
+      this.getPubSub(),
+    );
   }
 
   /**
